@@ -1,5 +1,5 @@
 # AES-Encrypted-Communication
-Python implementation of a server-client encrypted communication program using my own algorithms for ECB and CBF (Advanced Encryption Standard argorithms)
+Python implementation of a server-client encrypted communication program using my own algorithms for ECB and CBF (Advanced Encryption Standard argorithms)<\br>
 **Program Flow**:
   - A sends B and KM(key manager) the encryption method (ECB/CBF)
   - KM encrypts a random key and sends it to A
