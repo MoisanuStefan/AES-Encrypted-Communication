@@ -1,6 +1,6 @@
-from AES import AesWrap
 import MyAES
 import socket
+from Crypto.Cipher import AES
 
 go_msg = "go"
 K_prim = b'temaunulaborator'
@@ -10,13 +10,13 @@ MSG_SIZE = 1024
 
 def client_program():
     host = socket.gethostname()
-    port = 5004
+    port = 6666
     client_socket = socket.socket()
     client_socket.connect((host, port))
 
     encryption_method = client_socket.recv(MSG_SIZE).decode()  # receive enc method
     key_from_a = client_socket.recv(MSG_SIZE)  # receive encrypted key
-    cipher = AesWrap(encryption_method.lower(), K_prim, IV)  # prepare cipher for decryption
+    cipher = AES.new(K_prim, AES.MODE_ECB)  # prepare cipher for decryption
 
     decrypted_key = cipher.decrypt(key_from_a)  # decrypt the key using specified encryption method
     print("Received key from A and decrypted it using " + encryption_method.lower() + " algorithm: ", decrypted_key)

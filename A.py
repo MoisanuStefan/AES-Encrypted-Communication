@@ -1,7 +1,7 @@
-import os
 import socket
-from AES import AesWrap
 import MyAES
+from Crypto.Cipher import AES
+
 
 K_prim = b'temaunulaborator'
 IV = "saisprezecebiti1"
@@ -10,7 +10,7 @@ MSG_SIZE = 1024
 
 def server_program():
     host = socket.gethostname()
-    port = 5004
+    port = 6666
 
     server_socket = socket.socket()
     server_socket.bind((host, port))
@@ -25,8 +25,8 @@ def server_program():
 
     encryption_method = input('Communicate with B using ECB or CFB? \n-> ')
     conn_b.send(encryption_method.lower().encode())  # tell B encryption method
-    conn_km.send(encryption_method.encode())  # tell km encryption method
-    print("Encryption method sent to km")
+    conn_km.send(encryption_method.encode())  # ask KM for encrypted key
+    print("Requested key from KM")
     key_from_km = conn_km.recv(MSG_SIZE)  # wait for km to generate requested key
     conn_km.close()
     if not key_from_km:
@@ -34,7 +34,7 @@ def server_program():
         exit(1)
 
     print("Key received from KM: ", key_from_km)
-    cipher = AesWrap(encryption_method.lower(), K_prim, IV)  # prepare cipher to decrypt key from km
+    cipher = AES.new(K_prim, AES.MODE_ECB)  # prepare cipher to decrypt key from km
     conn_b.send(key_from_km)  # send encrypted key to B
     print("Encrypted key sent to B.")
     decrypted_key = cipher.decrypt(key_from_km)  # decrypt key using algorithm from input

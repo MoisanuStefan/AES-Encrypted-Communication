@@ -1,7 +1,7 @@
 import random
 import socket
 import os
-from AES import AesWrap
+from Crypto.Cipher import AES
 
 
 K_prim = b'temaunulaborator'
@@ -17,19 +17,19 @@ MSG_SIZE = 1024
 def client_program():
 
     host = socket.gethostname()
-    port = 5004
+    port = 6666
     client_socket = socket.socket()
     client_socket.connect((host, port))
 
-    encryption_method = client_socket.recv(1024).decode()  # receive enc method
-    cipher = AesWrap(encryption_method,K_prim, IV)
-    print("Encryption method chosen by A: ", encryption_method)
+    encryption_method = client_socket.recv(1024).decode()  # receive signal to generate key
+    cipher = AES.new(K_prim, AES.MODE_ECB)
     #   key = get_random_string(16)
     key = os.urandom(16)     # generate random key using cryptographic library
     print("Randomly generated key: ", str(key))
     encrypted_k = cipher.encrypt(key)   # encrypt using AES library
     print("Ciphertext: ", encrypted_k)
     client_socket.send(encrypted_k)
+    client_socket.close()
 
 
 if __name__ == '__main__':
